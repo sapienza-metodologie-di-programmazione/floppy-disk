@@ -13,7 +13,7 @@ public class AppTest {
 
     @Test
     public void testValidPlace1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(MEMORY - 100);
         } catch (OutOfMemory e) {
@@ -23,7 +23,7 @@ public class AppTest {
 
     @Test
     public void testValidPlace2() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(202095);
         } catch (OutOfMemory e) {
@@ -33,7 +33,7 @@ public class AppTest {
 
     @Test
     public void testOutOfMemoryPlace1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(MEMORY + 10);
             fail("Expected an OutOfMemory exception!");
@@ -43,7 +43,7 @@ public class AppTest {
 
     @Test
     public void testOutOfMemoryPlace2() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(-1000);
             fail("Expected an OutOfMemory exception!");
@@ -53,7 +53,7 @@ public class AppTest {
 
     @Test
     public void testValidRead1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(1000);
 
@@ -62,9 +62,10 @@ public class AppTest {
                 bytes.add((byte) (index % 255));
 
             floppyDisk.write(bytes);
+            floppyDisk.placeHead(1001);
             List<Byte> read = floppyDisk.read(9910);
             for (int i = 0; i < 9910; i++)
-                assertEquals(bytes.get(i), read.get(i));
+                assertEquals(bytes.get(i + 1), read.get(i));
         } catch (WriteBlockActive e) {
             fail("Didn't expect a WriteBlock exception");
         } catch (UndefinedMemory e) {
@@ -76,7 +77,7 @@ public class AppTest {
 
     @Test
     public void testOutOfMemoryRead1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(MEMORY - 100);
 
@@ -97,7 +98,7 @@ public class AppTest {
 
     @Test
     public void testUndefinedMemoryRead1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(2424);
 
@@ -118,7 +119,7 @@ public class AppTest {
 
     @Test
     public void testValidWrite1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(291800);
             floppyDisk.activateWriteBlock();
@@ -138,7 +139,7 @@ public class AppTest {
 
     @Test
     public void testOutOfMemoryWrite1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(MEMORY - 100);
 
@@ -156,7 +157,7 @@ public class AppTest {
 
     @Test
     public void testWriteBlockActiveWrite1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
         try {
             floppyDisk.activateWriteBlock();
             floppyDisk.placeHead(291800);
@@ -175,7 +176,7 @@ public class AppTest {
 
     @Test
     public void testValidFormat1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
 
         try {
             floppyDisk.format();
@@ -186,7 +187,7 @@ public class AppTest {
 
     @Test
     public void testWriteBlockFormat1() {
-        Floppy floppyDisk = App.floppyDisk();
+        Disk floppyDisk = App.floppyDisk();
 
         try {
             floppyDisk.activateWriteBlock();

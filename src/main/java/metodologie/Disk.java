@@ -11,7 +11,7 @@ class OutOfMemory extends Exception {
 class WriteBlockActive extends Exception {
 }
 
-public interface Floppy {
+public interface Disk {
     void placeHead(long position) throws OutOfMemory;
 
     List<Byte> read(long size) throws OutOfMemory, UndefinedMemory;

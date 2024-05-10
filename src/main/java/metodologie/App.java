@@ -7,8 +7,4 @@ public class App {
     public static Floppy floppyDisk() {
         return null;
     }
-
-    public static Floppy bigFloppyDisk() {
-        return null;
-    }
 }

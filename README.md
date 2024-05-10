@@ -8,16 +8,8 @@ Il floppy disk possiede anche un **blocco scrittura** che è possibile *attivare
 
 ## Test
 
-> NOTA: è stato lasciato appositamente un errore di compilazione in `AppTest.java`. Capire cosa è necessario modificare nell'interfaccia Floppy per risolvere l'errore!
-
 - `public static Floppy floppyDisk()`
     - ritorna un'istanza dell'interfaccia `Floppy` che occupa i normali `1.4 MB`
-
-### Test difficile
-
-- `public static Floppy bigFloppyDisk()`
-    - ritorna un'istanza dell'interfaccia `Floppy` che occupa `20 GB` (`21474836480 Byte`)
-    - questa funzione va implementata **dopo aver superato i test** per il floppy disk da `1.4 MB` 
 
 ### interfaccia Floppy
 
@@ -29,13 +21,39 @@ L'interfaccia `Floppy` richiede di implementare
     - il byte con indice `1474560` è considerato `OutOfMemory` (i byte sono indicizzati partendo da `0`)
 
 ```java
-
+floppyDisk.placeHead(100) -> Ok
+floppyDisk.placeHead(-1000) -> OutOfMemory
+floppyDisk.placeHead(1474560) -> OutOfMemory
+floppyDisk.placeHead(2909201) -> OutOfMemory
 ```
 
 - `List<Byte> read(int size) throws OutOfMemory, UndefinedMemory`
     - legge un numero di `byte` pari a `size` dalla memoria, partendo dalla `position` impostata
     - se leggendo **esce dalla memoria massima possibile nel floppy disk**, lancia l'eccezione `OutOfMemory` e resetta la memoria al valore precedente
     - se si prova a leggere memoria mai scritta fino a quel momento, lancia l'eccezione `UndefinedMemory` 
+
+```java
+floppyDisk.placeHead(100)
+floppyDisk.read(10) -> UndefinedMemory // non ci avevo scritto nulla prima
+
+---
+
+floppyDisk.placeHead(100)
+floppyDisk.write(List<Byte> {10, 128, 12, 55})
+floppyDisk.read(3) -> {10, 128, 12}
+
+---
+
+floppyDisk.placeHead(100)
+floppyDisk.write({10, 128, 12, 55})
+floppyDisk.placeHead(101)
+floppyDisk.read(3) -> {128, 12, 55}
+
+---
+
+floppyDisk.placeHead(1474559)
+floppyDisk.read(1) -> OutOfMemory
+```
 
 - `void write(List<Byte> bytes) throws OutOfMemory, WriteBlockActive`
     - scrive i `bytes` in memoria partendo dalla `position` impostata

@@ -10,7 +10,6 @@ import org.junit.Test;
 
 public class AppTest {
     static int MEMORY = 1474560;
-    static long BIG_MEMORY = 21474836480L;
 
     @Test
     public void testValidPlace1() {
@@ -122,11 +121,13 @@ public class AppTest {
         Floppy floppyDisk = App.floppyDisk();
         try {
             floppyDisk.placeHead(291800);
+            floppyDisk.activateWriteBlock();
 
             List<Byte> bytes = new ArrayList<>();
             for (int index = 0; index < 901; index++)
                 bytes.add((byte) (index % 255));
 
+            floppyDisk.deactivateWriteBlock();
             floppyDisk.write(bytes);
         } catch (WriteBlockActive e) {
             fail("Didn't expect a WriteBlock exception");
@@ -192,78 +193,6 @@ public class AppTest {
             floppyDisk.format();
             fail("Expected a WriteBlockActive exception");
         } catch (WriteBlockActive e) {
-        }
-    }
-
-    // static long BIG_MEMORY = 21474836480L;
-    @Test
-    public void testValidBigFloppy1() {
-        Floppy bigFloppyDisk = App.bigFloppyDisk();
-
-        try {
-            bigFloppyDisk.placeHead(BIG_MEMORY - 10);
-
-            List<Byte> bytes = new ArrayList<>();
-            for (int index = 0; index < 8; index++)
-                bytes.add((byte) (index % 255));
-
-            bigFloppyDisk.write(bytes);
-            List<Byte> read = bigFloppyDisk.read(4);
-            for (int i = 0; i < 4; i++)
-                assertEquals(bytes.get(i), read.get(i));
-
-        } catch (WriteBlockActive e) {
-            fail("Didn't expect a WriteBlock exception");
-        } catch (UndefinedMemory e) {
-            fail("Didn't expect an UndefinedMemory exception");
-        } catch (OutOfMemory e) {
-            fail("Didn't expect an OutOfMemory exception");
-        }
-    }
-
-    @Test
-    public void testOutOfMemoryBigFloppy1() {
-        Floppy bigFloppyDisk = App.bigFloppyDisk();
-
-        try {
-            bigFloppyDisk.placeHead(BIG_MEMORY - 10);
-
-            List<Byte> bytes = new ArrayList<>();
-            for (int index = 0; index < 20; index++)
-                bytes.add((byte) (index % 255));
-
-            bigFloppyDisk.write(bytes);
-            bigFloppyDisk.read(4);
-            fail("Expected an OutOfMemory exception");
-        } catch (WriteBlockActive e) {
-            fail("Didn't expect a WriteBlock exception");
-        } catch (UndefinedMemory e) {
-            fail("Didn't expect an UndefinedMemory exception");
-        } catch (OutOfMemory e) {
-        }
-
-    }
-
-    @Test
-    public void testUNdefinedMemoryBigFloppy1() {
-        Floppy bigFloppyDisk = App.bigFloppyDisk();
-
-        try {
-            bigFloppyDisk.placeHead(BIG_MEMORY - 1000);
-
-            List<Byte> bytes = new ArrayList<>();
-            for (int index = 0; index < 8; index++)
-                bytes.add((byte) (index % 255));
-
-            bigFloppyDisk.write(bytes);
-            bigFloppyDisk.read(12);
-
-            fail("Expected an UndefinedMemory exception");
-        } catch (WriteBlockActive e) {
-            fail("Didn't expect a WriteBlock exception");
-        } catch (UndefinedMemory e) {
-        } catch (OutOfMemory e) {
-            fail("Didn't expect an OutOfMemory exception");
         }
     }
 }

@@ -12,9 +12,9 @@ class WriteBlockActive extends Exception {
 }
 
 public interface Floppy {
-    void placeHead(int position) throws OutOfMemory;
+    void placeHead(long position) throws OutOfMemory;
 
-    List<Byte> read(int size) throws OutOfMemory, UndefinedMemory;
+    List<Byte> read(long size) throws OutOfMemory, UndefinedMemory;
 
     void write(List<Byte> bytes) throws OutOfMemory, WriteBlockActive;
 
